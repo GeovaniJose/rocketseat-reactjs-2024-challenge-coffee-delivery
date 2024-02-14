@@ -2,8 +2,10 @@ import { useTheme } from 'styled-components'
 import { Coffee, Package, ShoppingCart, Timer } from '@phosphor-icons/react'
 
 import heroImg from '../../assets/hero.svg'
+import { Card } from '../../components/Card'
+import { coffees } from '../../../data.json'
 
-import { Heading, Hero, HeroContent, Info } from './styles'
+import { CoffeList, Heading, Hero, HeroContent, Info } from './styles'
 
 export function Home() {
   const theme = useTheme()
@@ -18,11 +20,11 @@ export function Home() {
               <br />
               para qualquer hora do dia
             </h1>
-            <h2>
+            <h3>
               Com o Coffee Delivery você recebe seu café onde estiver, a
               <br />
               qualquer hora
-            </h2>
+            </h3>
           </Heading>
 
           <Info>
@@ -69,6 +71,16 @@ export function Home() {
           alt="Copo de café descartável com alguns grãos de café em volta"
         />
       </Hero>
+
+      <CoffeList>
+        <h2>Nossos cafés</h2>
+
+        <ul>
+          {coffees.map((coffee) => (
+            <Card key={coffee.id} coffee={coffee} />
+          ))}
+        </ul>
+      </CoffeList>
     </div>
   )
 }

@@ -24,7 +24,7 @@ export const Heading = styled.div`
     color: ${(props) => props.theme.colors['base-title']};
   }
 
-  > h2 {
+  > h3 {
     ${mixins.fonts.textL}
     color: ${(props) => props.theme.colors['base-subtitle']};
   }
@@ -48,5 +48,24 @@ export const Info = styled.div`
       border-radius: 50%;
       color: ${(props) => props.theme.colors.background};
     }
+  }
+`
+
+export const CoffeList = styled.main`
+  display: flex;
+  flex-direction: column;
+  gap: 3.375rem;
+  padding: 2rem 0;
+
+  > h2 {
+    ${mixins.fonts.titleL}
+    color: ${(props) => props.theme.colors['base-subtitle']};
+  }
+
+  > ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem 2rem;
   }
 `
