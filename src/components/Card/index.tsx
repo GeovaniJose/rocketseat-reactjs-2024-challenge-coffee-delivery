@@ -1,4 +1,5 @@
-import { ShoppingCartSimple } from '@phosphor-icons/react'
+import { useEffect, useState } from 'react'
+import { Check, ShoppingCartSimple } from '@phosphor-icons/react'
 
 import { QuantityCounter } from '../QuantityCounter'
 
@@ -27,6 +28,40 @@ interface CardProps {
 }
 
 export function Card({ coffee }: CardProps) {
+  const [quantity, setQuantity] = useState(1)
+  const [isItemAdded, setIsItemAdded] = useState(false)
+
+  function incrementQuantity() {
+    setQuantity((state) => state + 1)
+  }
+
+  function decrementQuantity() {
+    if (quantity > 1) {
+      setQuantity((state) => state - 1)
+    }
+  }
+
+  function handleAddItem() {
+    setIsItemAdded(true)
+    setQuantity(1)
+  }
+
+  useEffect(() => {
+    let timeout: number
+
+    if (isItemAdded) {
+      timeout = setTimeout(() => {
+        setIsItemAdded(false)
+      }, 700)
+    }
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout)
+      }
+    }
+  }, [isItemAdded])
+
   return (
     <Container>
       <CoffeImg src={coffee.imageSrc} alt="" />
@@ -53,10 +88,18 @@ export function Card({ coffee }: CardProps) {
         </Price>
 
         <Order>
-          <QuantityCounter />
+          <QuantityCounter
+            quantity={quantity}
+            incrementQuantity={incrementQuantity}
+            decrementQuantity={decrementQuantity}
+          />
 
-          <button>
-            <ShoppingCartSimple weight="fill" size={22} />
+          <button onClick={handleAddItem}>
+            {isItemAdded ? (
+              <Check size={22} />
+            ) : (
+              <ShoppingCartSimple weight="fill" size={22} />
+            )}
           </button>
         </Order>
       </Control>
