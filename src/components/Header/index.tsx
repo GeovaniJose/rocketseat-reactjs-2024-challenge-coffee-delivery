@@ -1,11 +1,21 @@
+import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { MapPin, ShoppingCart } from '@phosphor-icons/react'
 
 import logoCoffeeDelivery from '../../assets/logo-coffee-delivery.svg'
 
+import { CartContext } from '../../contexts/CartContext'
+
 import { Aside, HeaderContainer } from './styles'
 
 export function Header() {
+  const { products } = useContext(CartContext)
+
+  const productsAmount = products.reduce(
+    (acc, product) => acc + product.quantity,
+    0,
+  )
+
   return (
     <HeaderContainer>
       <Link to="/">
@@ -23,7 +33,7 @@ export function Header() {
 
         <Link to="/checkout">
           <ShoppingCart size={22} weight="fill" />
-          <span>0</span>
+          <span>{productsAmount}</span>
         </Link>
       </Aside>
     </HeaderContainer>

@@ -53,9 +53,8 @@ export const Aside = styled.aside`
       font-weight: bold;
       color: ${({ theme }) => theme.colors.white};
       background-color: ${({ theme }) => theme.colors['yellow-dark']};
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      border-radius: 100px;
+      padding: 0 0.3rem;
       display: flex;
       align-items: center;
       justify-content: center;
