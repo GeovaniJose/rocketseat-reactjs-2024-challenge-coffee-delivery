@@ -65,7 +65,7 @@ export const CoffeList = styled.main`
   > ul {
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
     gap: 2.5rem 2rem;
   }
 `

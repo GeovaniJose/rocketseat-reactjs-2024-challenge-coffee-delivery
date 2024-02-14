@@ -7,13 +7,13 @@ export const Container = styled.li`
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  padding: 1.5rem;
+  padding: 1.25rem;
   background: ${(props) => props.theme.colors['base-card']};
   border-radius: 6px 36px;
 `
 
 export const CoffeImg = styled.img`
-  margin-top: calc(0px - 1.5rem - 1.25rem);
+  margin-top: calc(0px - 1.25rem - 1.25rem);
 `
 
 export const Tags = styled.div`
