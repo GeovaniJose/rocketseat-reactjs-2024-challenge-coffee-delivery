@@ -120,13 +120,14 @@ export const ProductItem = styled.div`
 `
 
 export const ProductInfo = styled.div`
-  max-width: 13rem;
+  max-width: 12rem;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
 
   > span {
+    width: 100%;
     color: ${(props) => props.theme.colors['base-subtitle']};
   }
 
@@ -192,5 +193,10 @@ export const ConfirmButton = styled.button`
 
   &:hover {
     background: ${(props) => props.theme.colors['yellow-dark']};
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background: ${(props) => props.theme.colors['yellow-light']};
   }
 `

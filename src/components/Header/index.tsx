@@ -9,9 +9,9 @@ import { CartContext } from '../../contexts/CartContext'
 import { Aside, HeaderContainer } from './styles'
 
 export function Header() {
-  const { products } = useContext(CartContext)
+  const { cart } = useContext(CartContext)
 
-  const productsAmount = products.reduce(
+  const productsAmount = cart.reduce(
     (acc, product) => acc + product.quantity,
     0,
   )
@@ -33,7 +33,7 @@ export function Header() {
 
         <Link to="/checkout">
           <ShoppingCart size={22} weight="fill" />
-          <span>{productsAmount}</span>
+          {productsAmount ? <span>{productsAmount}</span> : null}
         </Link>
       </Aside>
     </HeaderContainer>

@@ -1,7 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
 import { Check, ShoppingCartSimple } from '@phosphor-icons/react'
 
-import { CartContext, Coffee } from '../../contexts/CartContext'
+import { CartContext } from '../../contexts/CartContext'
+import { Product } from '../../reducers/cart/reducer'
 import { QuantityCounter } from '../QuantityCounter'
 
 import {
@@ -16,14 +17,14 @@ import {
 } from './styles'
 
 interface CardProps {
-  coffee: Coffee
+  coffee: Omit<Product, 'quantity'>
 }
 
 export function Card({ coffee }: CardProps) {
   const [quantity, setQuantity] = useState(1)
   const [isItemAdded, setIsItemAdded] = useState(false)
 
-  const { addProductToCart } = useContext(CartContext)
+  const { addProduct } = useContext(CartContext)
 
   function incrementQuantity() {
     setQuantity((state) => state + 1)
@@ -36,7 +37,7 @@ export function Card({ coffee }: CardProps) {
   }
 
   function handleAddItem() {
-    addProductToCart(coffee, quantity)
+    addProduct({ ...coffee, quantity })
     setIsItemAdded(true)
     setQuantity(1)
   }

@@ -1,3 +1,5 @@
+import { Fragment, useContext } from 'react'
+
 import {
   Bank,
   CreditCard,
@@ -7,10 +9,10 @@ import {
   Trash,
 } from '@phosphor-icons/react'
 
-import tradicionalImg from '../../assets/coffees/expresso.png'
 import { Radio } from '../../components/Radio'
 import { TextField } from '../../components/TextField'
 import { QuantityCounter } from '../../components/QuantityCounter'
+import { CartContext } from '../../contexts/CartContext'
 
 import {
   Address,
@@ -28,7 +30,32 @@ import {
   Title,
 } from './styles'
 
+const shippingPrice = 3.5
+
 export function Checkout() {
+  const {
+    cart,
+    removeProduct,
+    incrementProductQuantity,
+    decrementProductQuantity,
+  } = useContext(CartContext)
+
+  const totalProductsPrice = cart.reduce((previousValue, currentItem) => {
+    return (previousValue += currentItem.price * currentItem.quantity)
+  }, 0)
+
+  function handleItemIncrement(itemId: string) {
+    incrementProductQuantity(itemId)
+  }
+
+  function handleItemDecrement(itemId: string) {
+    decrementProductQuantity(itemId)
+  }
+
+  function handleItemRemove(productId: string) {
+    removeProduct(productId)
+  }
+
   return (
     <Container>
       <div>
@@ -114,70 +141,73 @@ export function Checkout() {
         <Title>Cafés selecionados</Title>
 
         <CartPreview>
-          <ProductItem>
-            <img src={tradicionalImg} alt="" />
+          {cart.map((product) => (
+            <Fragment key={product.id}>
+              <ProductItem>
+                <img src={product.imageSrc} alt="" />
 
-            <ProductInfo>
-              <span>Expresso Tradicional</span>
+                <ProductInfo>
+                  <span>{product.title}</span>
 
-              <QuantityCounter
-                quantity={1}
-                incrementQuantity={() => null}
-                decrementQuantity={() => null}
-              />
+                  <QuantityCounter
+                    quantity={product.quantity}
+                    incrementQuantity={() => handleItemIncrement(product.id)}
+                    decrementQuantity={() => handleItemDecrement(product.id)}
+                  />
 
-              <button>
-                <Trash size={16} />
-                <span>Remover</span>
-              </button>
-            </ProductInfo>
+                  <button onClick={() => handleItemRemove(product.id)}>
+                    <Trash size={16} />
+                    <span>Remover</span>
+                  </button>
+                </ProductInfo>
 
-            <aside>R$ 9,90</aside>
-          </ProductItem>
+                <aside>
+                  {(product.quantity * product.price).toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  })}
+                </aside>
+              </ProductItem>
 
-          <Divider />
-
-          <ProductItem>
-            <img src={tradicionalImg} alt="" />
-
-            <ProductInfo>
-              <span>Expresso Tradicional</span>
-
-              <QuantityCounter
-                quantity={1}
-                incrementQuantity={() => null}
-                decrementQuantity={() => null}
-              />
-
-              <button>
-                <Trash size={16} />
-                <span>Remover</span>
-              </button>
-            </ProductInfo>
-
-            <aside>R$ 9,90</aside>
-          </ProductItem>
-
-          <Divider />
+              <Divider />
+            </Fragment>
+          ))}
 
           <CartTotal>
             <div>
               <span>Total de itens</span>
-              <span>R$ 29,70</span>
+              <span>
+                {new Intl.NumberFormat('pt-br', {
+                  currency: 'BRL',
+                  style: 'currency',
+                }).format(totalProductsPrice)}
+              </span>
             </div>
 
             <div>
               <span>Entrega</span>
-              <span>R$ 3,50</span>
+              <span>
+                {new Intl.NumberFormat('pt-br', {
+                  currency: 'BRL',
+                  style: 'currency',
+                }).format(shippingPrice)}
+              </span>
             </div>
 
             <div>
               <strong>Total</strong>
-              <strong>R$ 33,20</strong>
+              <strong>
+                {new Intl.NumberFormat('pt-br', {
+                  currency: 'BRL',
+                  style: 'currency',
+                }).format(totalProductsPrice + shippingPrice)}
+              </strong>
             </div>
           </CartTotal>
 
-          <ConfirmButton>Confirmar pedido</ConfirmButton>
+          <ConfirmButton disabled={!cart.length}>
+            Confirmar pedido
+          </ConfirmButton>
         </CartPreview>
       </div>
     </Container>
