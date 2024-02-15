@@ -2,6 +2,12 @@ import styled from 'styled-components'
 
 import { mixins } from '../../styles/mixins'
 
+export const Box = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`
+
 export const Container = styled.label`
   display: flex;
   align-items: center;
@@ -39,4 +45,10 @@ export const Container = styled.label`
     ${mixins.fonts.textS};
     color: ${({ theme }) => theme.colors['base-label']};
   }
+`
+
+export const ErrorMessage = styled.p`
+  ${mixins.fonts.textXS};
+  font-weight: 400;
+  color: red;
 `

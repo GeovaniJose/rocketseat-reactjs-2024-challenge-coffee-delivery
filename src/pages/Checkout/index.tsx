@@ -1,4 +1,7 @@
 import { Fragment, useContext } from 'react'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
 import {
   Bank,
@@ -24,11 +27,38 @@ import {
   FormContent,
   Heading,
   Payment,
+  PaymentErrorMessage,
   PaymentOptions,
   ProductInfo,
   ProductItem,
   Title,
 } from './styles'
+
+type FormValues = {
+  cep: number
+  street: string
+  number: string
+  fullAddress: string
+  neighborhood: string
+  city: string
+  uf: string
+  paymentMethod: 'credito' | 'debito' | 'dinheiro'
+}
+
+const newOrder = z.object({
+  cep: z.number({ invalid_type_error: 'Informe o CEP' }),
+  street: z.string().min(1, 'Informe a rua'),
+  number: z.string().min(1, 'Informe o número'),
+  fullAddress: z.string(),
+  neighborhood: z.string().min(1, 'Informe o bairro'),
+  city: z.string().min(1, 'Informe a cidade'),
+  uf: z.string().min(1, 'Informe a UF'),
+  paymentMethod: z.enum(['credito', 'debito', 'dinheiro'], {
+    invalid_type_error: 'Informe um método de pagamento',
+  }),
+})
+
+export type OrderInfo = z.infer<typeof newOrder>
 
 const shippingPrice = 3.5
 
@@ -38,11 +68,23 @@ export function Checkout() {
     removeProduct,
     incrementProductQuantity,
     decrementProductQuantity,
+    checkout,
   } = useContext(CartContext)
 
   const totalProductsPrice = cart.reduce((previousValue, currentItem) => {
     return (previousValue += currentItem.price * currentItem.quantity)
   }, 0)
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(newOrder),
+  })
+
+  const selectedPaymentMethod = watch('paymentMethod')
 
   function handleItemIncrement(itemId: string) {
     incrementProductQuantity(itemId)
@@ -54,6 +96,14 @@ export function Checkout() {
 
   function handleItemRemove(productId: string) {
     removeProduct(productId)
+  }
+
+  const handleOrderCheckout: SubmitHandler<FormValues> = (data) => {
+    if (cart.length === 0) {
+      return alert('É preciso ter pelo menos um item no carrinho')
+    }
+
+    checkout(data)
   }
 
   return (
@@ -72,34 +122,57 @@ export function Checkout() {
               </div>
             </Heading>
 
-            <form action="">
+            <form id="order" onSubmit={handleSubmit(handleOrderCheckout)}>
               <TextField
                 placeholder="CEP"
                 type="number"
                 style={{ gridArea: 'cep' }}
+                error={errors.cep}
+                {...register('cep', { valueAsNumber: true })}
               />
 
-              <TextField placeholder="Rua" style={{ gridArea: 'street' }} />
+              <TextField
+                placeholder="Rua"
+                style={{ gridArea: 'street' }}
+                error={errors.street}
+                {...register('street')}
+              />
 
-              <TextField placeholder="Número" style={{ gridArea: 'number' }} />
+              <TextField
+                placeholder="Número"
+                style={{ gridArea: 'number' }}
+                error={errors.number}
+                {...register('number')}
+              />
 
               <TextField
                 placeholder="Complemento"
                 style={{ gridArea: 'fullAddress' }}
                 optional
+                error={errors.fullAddress}
+                {...register('fullAddress')}
               />
 
               <TextField
                 placeholder="Bairro"
                 style={{ gridArea: 'neighborhood' }}
+                error={errors.neighborhood}
+                {...register('neighborhood')}
               />
 
-              <TextField placeholder="Cidade" style={{ gridArea: 'city' }} />
+              <TextField
+                placeholder="Cidade"
+                style={{ gridArea: 'city' }}
+                error={errors.city}
+                {...register('city')}
+              />
 
               <TextField
                 placeholder="UF"
                 maxLength={2}
                 style={{ gridArea: 'uf' }}
+                error={errors.uf}
+                {...register('uf')}
               />
             </form>
           </Address>
@@ -118,21 +191,39 @@ export function Checkout() {
             </Heading>
 
             <PaymentOptions>
-              <Radio isSelected name="paymentMethod" value="credito">
+              <Radio
+                value="credito"
+                isSelected={selectedPaymentMethod === 'credito'}
+                {...register('paymentMethod')}
+              >
                 <CreditCard size={16} />
                 <span>Cartão de crédito</span>
               </Radio>
 
-              <Radio isSelected={false} name="paymentMethod" value="debito">
+              <Radio
+                value="debito"
+                isSelected={selectedPaymentMethod === 'debito'}
+                {...register('paymentMethod')}
+              >
                 <Bank size={16} />
                 <span>Cartão de débito</span>
               </Radio>
 
-              <Radio isSelected={false} name="paymentMethod" value="dinheiro">
+              <Radio
+                value="dinheiro"
+                isSelected={selectedPaymentMethod === 'dinheiro'}
+                {...register('paymentMethod')}
+              >
                 <Money size={16} />
                 <span>Dinheiro</span>
               </Radio>
             </PaymentOptions>
+
+            {errors.paymentMethod ? (
+              <PaymentErrorMessage role="alert">
+                {errors.paymentMethod.message}
+              </PaymentErrorMessage>
+            ) : null}
           </Payment>
         </FormContent>
       </div>
@@ -205,7 +296,7 @@ export function Checkout() {
             </div>
           </CartTotal>
 
-          <ConfirmButton disabled={!cart.length}>
+          <ConfirmButton type="submit" form="order" disabled={!cart.length}>
             Confirmar pedido
           </ConfirmButton>
         </CartPreview>

@@ -93,6 +93,13 @@ export const PaymentOptions = styled.div`
   }
 `
 
+export const PaymentErrorMessage = styled.p`
+  margin-top: -1rem;
+  ${mixins.fonts.textXS};
+  font-weight: 400;
+  color: red;
+`
+
 export const CartPreview = styled.div`
   flex: 1;
   padding: 2.5rem;

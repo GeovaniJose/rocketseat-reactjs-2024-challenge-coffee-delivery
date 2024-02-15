@@ -1,21 +1,21 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import { DefaultLayout } from './layouts/DefaultLayout'
 import { Checkout } from './pages/Checkout'
 import { Home } from './pages/Home'
+import { App } from './App'
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    Component: DefaultLayout,
+    element: <App />,
     children: [
       {
         path: '/',
-        Component: Home,
+        element: <Home />,
       },
       {
         path: '/checkout',
-        Component: Checkout,
+        element: <Checkout />,
       },
     ],
   },
