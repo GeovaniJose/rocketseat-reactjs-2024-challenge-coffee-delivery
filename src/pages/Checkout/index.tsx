@@ -4,19 +4,27 @@ import {
   CurrencyDollar,
   MapPinLine,
   Money,
+  Trash,
 } from '@phosphor-icons/react'
 
+import tradicionalImg from '../../assets/coffees/expresso.png'
 import { Radio } from '../../components/Radio'
 import { TextField } from '../../components/TextField'
+import { QuantityCounter } from '../../components/QuantityCounter'
 
 import {
   Address,
   CartPreview,
+  CartTotal,
+  ConfirmButton,
   Container,
+  Divider,
   FormContent,
   Heading,
   Payment,
   PaymentOptions,
+  ProductInfo,
+  ProductItem,
   Title,
 } from './styles'
 
@@ -105,7 +113,72 @@ export function Checkout() {
       <div>
         <Title>Cafés selecionados</Title>
 
-        <CartPreview>Confirmar pedido</CartPreview>
+        <CartPreview>
+          <ProductItem>
+            <img src={tradicionalImg} alt="" />
+
+            <ProductInfo>
+              <span>Expresso Tradicional</span>
+
+              <QuantityCounter
+                quantity={1}
+                incrementQuantity={() => null}
+                decrementQuantity={() => null}
+              />
+
+              <button>
+                <Trash size={16} />
+                <span>Remover</span>
+              </button>
+            </ProductInfo>
+
+            <aside>R$ 9,90</aside>
+          </ProductItem>
+
+          <Divider />
+
+          <ProductItem>
+            <img src={tradicionalImg} alt="" />
+
+            <ProductInfo>
+              <span>Expresso Tradicional</span>
+
+              <QuantityCounter
+                quantity={1}
+                incrementQuantity={() => null}
+                decrementQuantity={() => null}
+              />
+
+              <button>
+                <Trash size={16} />
+                <span>Remover</span>
+              </button>
+            </ProductInfo>
+
+            <aside>R$ 9,90</aside>
+          </ProductItem>
+
+          <Divider />
+
+          <CartTotal>
+            <div>
+              <span>Total de itens</span>
+              <span>R$ 29,70</span>
+            </div>
+
+            <div>
+              <span>Entrega</span>
+              <span>R$ 3,50</span>
+            </div>
+
+            <div>
+              <strong>Total</strong>
+              <strong>R$ 33,20</strong>
+            </div>
+          </CartTotal>
+
+          <ConfirmButton>Confirmar pedido</ConfirmButton>
+        </CartPreview>
       </div>
     </Container>
   )
