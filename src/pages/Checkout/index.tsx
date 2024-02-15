@@ -6,6 +6,9 @@ import {
   Money,
 } from '@phosphor-icons/react'
 
+import { Radio } from '../../components/Radio'
+import { TextField } from '../../components/TextField'
+
 import {
   Address,
   CartPreview,
@@ -35,29 +38,30 @@ export function Checkout() {
             </Heading>
 
             <form action="">
-              <input
+              <TextField
                 placeholder="CEP"
                 type="number"
                 style={{ gridArea: 'cep' }}
               />
 
-              <input placeholder="Rua" style={{ gridArea: 'street' }} />
+              <TextField placeholder="Rua" style={{ gridArea: 'street' }} />
 
-              <input placeholder="Número" style={{ gridArea: 'number' }} />
+              <TextField placeholder="Número" style={{ gridArea: 'number' }} />
 
-              <input
+              <TextField
                 placeholder="Complemento"
                 style={{ gridArea: 'fullAddress' }}
+                optional
               />
 
-              <input
+              <TextField
                 placeholder="Bairro"
                 style={{ gridArea: 'neighborhood' }}
               />
 
-              <input placeholder="Cidade" style={{ gridArea: 'city' }} />
+              <TextField placeholder="Cidade" style={{ gridArea: 'city' }} />
 
-              <input
+              <TextField
                 placeholder="UF"
                 maxLength={2}
                 style={{ gridArea: 'uf' }}
@@ -79,38 +83,20 @@ export function Checkout() {
             </Heading>
 
             <PaymentOptions>
-              <label htmlFor="credito" data-state={true}>
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  id="credito"
-                  value="credito"
-                />
+              <Radio isSelected name="paymentMethod" value="credito">
                 <CreditCard size={16} />
                 <span>Cartão de crédito</span>
-              </label>
+              </Radio>
 
-              <label htmlFor="debito">
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  id="debito"
-                  value="debito"
-                />
+              <Radio isSelected={false} name="paymentMethod" value="debito">
                 <Bank size={16} />
                 <span>Cartão de débito</span>
-              </label>
+              </Radio>
 
-              <label htmlFor="dinheiro">
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  id="dinheiro"
-                  value="dinheiro"
-                />
+              <Radio isSelected={false} name="paymentMethod" value="dinheiro">
                 <Money size={16} />
                 <span>Dinheiro</span>
-              </label>
+              </Radio>
             </PaymentOptions>
           </Payment>
         </FormContent>
